@@ -3,6 +3,7 @@ function [zdata]=mkdata(nperiods,decrulea,decruleb,endog_,exog_,wishlist,irfshoc
 %[nsim, ksim, ysim, isim, csim] = mkdata(nperiods,cofb,endog_)
 
 % given decision rule 
+
 neqs = size(endog_,1);
 
 if  nargin<9
