@@ -1,0 +1,120 @@
+%2multibyte Version: 5.50.0.2890 CodePage: 65001
+%% This document created by Scientific Word (R) Version 2.0
+%For letter size
+%\setlength{\topmargin}{-4mm}
+
+
+\documentclass[thmsa,letterpaper]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{sw20jart}
+\usepackage{harvard}
+\usepackage[letterpaper,mag=1000]{geometry}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{TCIstyle=Article/art4.lat,jart,sw20jart}
+
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{Codepage=65001}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{LastRevised=Monday, June 03, 2013 11:31:45}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{Language=American English}
+%TCIDATA{<META NAME="PrintViewPercent" CONTENT="100">}
+%TCIDATA{ComputeDefs=
+%$\sigma ^{2}=y^{2}$
+%$z_{t}$
+%}
+
+
+\input tcilatex
+\geometry{margin=.8in,top=1in,bottom=1in,footskip=24pt}
+\renewcommand{\theequation}{\arabic{equation}} 
+
+\begin{document}
+
+\author{Matteo Iacoviello \\
+%EndAName
+FRB}
+\title{Equations for New-keynesian model with government spending}
+\date{%
+%TCIMACRO{\TeXButton{Today}{\today}}%
+%BeginExpansion
+\today%
+%EndExpansion
+}
+\maketitle
+
+\section{Model Equations}
+
+We sketch here the equations describing the equilibrium of the model. We
+drop the $t$ subscript to denote the steady-state value of a particular
+variable.
+
+\begin{eqnarray}
+c_{t}+k_{t} &=&w_{t}n_{t}+\left( RR_{t}z_{t}+1-\delta \right) k_{t-1}+\left(
+1-\frac{1}{X_{t}}\right) Y_{t}-\tau _{t}Y-b_{t}Y+R_{t-1}b_{t-1}Y  \TCItag{1}
+\\
+u_{c,t} &=&\beta E_{t}\left( \frac{u_{c,t+1}R_{t}}{\pi _{t+1}}\right)  
+\TCItag{2} \\
+u_{c,t}v_{t} &=&\beta E_{t}\left( u_{c,t+1}\left( RR_{t+1}+\left( 1-\delta
+\right) v_{t+1}\right) \right)   \TCItag{3} \\
+u_{c,t}w_{t} &=&u_{n,t}X_{wt}  \TCItag{4} \\
+Y_{t} &=&A_{t}n_{t}^{1-\mu }\left( z_{t}k_{t-1}\right) ^{\mu }  \TCItag{5} \\
+\left( 1-\mu \right) Y_{t} &=&X_{pt}w_{t}n_{t}  \TCItag{6} \\
+\mu Y_{t} &=&X_{pt}RR_{t}z_{t}k_{t-1}  \TCItag{7} \\
+\ln \pi _{t}-\iota _{\pi }\ln \pi _{t-1} &=&\beta \left( E_{t}\ln \pi
+_{t+1}-\iota _{\pi }\ln \pi _{t}\right) -\varepsilon _{\pi }\ln \left(
+X_{pt}/X_{p}\right) +u_{p,t}  \TCItag{8} \\
+\omega _{c,t}-\iota _{wc}\ln \pi _{t-1} &=&\beta \left( E_{t}\omega
+_{c,t+1}-\iota _{wc}\ln \pi _{t}\right) -\varepsilon _{wc}\ln \left(
+X_{wt}/X_{wc}\right)   \TCItag{9} \\
+R_{t} &=&\left( R_{t-1}\right) ^{r_{R}}\pi _{t}^{r_{\pi }\left(
+1-r_{R}\right) }\left( \frac{GDP_{t}}{GDP_{t-1}}\right) ^{r_{Y}\left(
+1-r_{R}\right) }\overline{rr}^{1-r_{R}}  \TCItag{10}
+\end{eqnarray}
+
+Additional definitions given by%
+\begin{eqnarray}
+u_{c,t} &=&\frac{1-\varepsilon _{c}}{1-\beta \varepsilon _{c}}\left( \frac{1%
+}{c_{t}-\varepsilon _{c}c_{t-1}}-\frac{\beta \varepsilon _{c}}{%
+c_{t+1}-\varepsilon _{c}c_{t}}\right)   \TCItag{11} \\
+u_{n,t} &=&\tau n_{t}^{\eta }  \TCItag{12}
+\end{eqnarray}
+
+The equation for capacity is%
+\begin{equation}
+RR_{t}=\left( \frac{1}{\beta }-\left( 1-\delta \right) \right) \left( \frac{%
+\zeta }{1-\zeta }z_{t}+1-\frac{\zeta }{1-\zeta }\right)   \tag{13}
+\end{equation}
+
+and the definition of investment is%
+\begin{equation}
+i_{t}=k_{t}-\left( 1-\delta \right) k_{t-1}  \tag{14}
+\end{equation}
+
+The optimality conditions related to investment are
+
+\begin{equation}
+u_{c,t}v_{t}\left( 1-mac_{t}\right) =u_{ct}-\beta G_{C}u_{c,t+1}mac_{t+1} 
+\tag{15}
+\end{equation}%
+where:%
+\begin{equation}
+mac_{t}=\frac{d\phi _{t}}{di_{t}}=\phi \left( i_{t}-i_{t-1}\right)   \tag{16}
+\end{equation}
+
+The remaining equations describe stochastic processes for the shocks and the
+evolution of government spending and the government budget constraint%
+\begin{eqnarray}
+g_{t}Y &=&\left( 1-\rho _{g}\right) gY+\rho _{g}g_{t-1}Y+\varepsilon _{gt}Y 
+\TCItag{17} \\
+g_{t}Y &=&R_{t-1}b_{t-1}Y=\tau _{t}Y+b_{t}Y  \TCItag{18} \\
+\tau _{t}Y &=&\rho _{\tau }\tau _{t-1}Y+\left( 1-\rho _{\tau }\right) \left(
+\varepsilon _{\tau b}b_{t-1}Y+\varepsilon _{\tau g}g_{t}Y\right)  
+\TCItag{19}
+\end{eqnarray}
+
+\end{document}
