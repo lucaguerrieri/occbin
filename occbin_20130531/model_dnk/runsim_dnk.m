@@ -10,11 +10,11 @@ set(0,'DefaultLineLineWidth',2)
 % option=1: solve model disregarding ZLB (calls function solve_no_constraint)
 % option=2: take ZLB into account
 %---------------------------------------------------------------------
-option=1;
+option=2;
 
 %---------------------------------------------------------------------
 % To compute multipliers at ZLB, solve two models
-% Model 1 is baseline model that takes us at the ZLB
+% Model 1 is baseline  that takes us at the ZLB
 % Model 2 is baseline model that takes us at the ZLB plus G shock
 %---------------------------------------------------------------------
 
@@ -23,9 +23,9 @@ for model=1:2
    
   % Pick color of charts
   if model==1;
-    colore='b';
+    this_color='b';
   else
-    colore='r';
+    this_color='r';
   end
   
   % This line to save additional parameters
@@ -38,11 +38,13 @@ for model=1:2
     baseline0=[ 0     0      0       0        0       0
               0.00  0.00   0.00    0.00     0.00    0.0 ]';
   end
+  
   % Model 2 is a model with a ZLB baseline
   if model==2
     baseline0=[ -0.04  -0.04   -0.04    -0.04      0   0
                  0.00   0.00   0.00     0.00     0.0   0.0  ]';
   end
+  
   % In both models, there is a positive G shock in period 6
   scenario1=[ 0     0      0       0        0       0
             0.00  0.00   0.00    0.00     0.00    0.01   ]';
@@ -91,33 +93,32 @@ for model=1:2
   end
   
   
-  
   scale=100;
   subplot(3,2,1)
-  plot(scale*y,'color',colore); hold on
+  plot(scale*y,'color',this_color); hold on
   title('Output')
   ylabel('percent deviation from baseline')
 
   subplot(3,2,2)
-  plot(scale*a_g,'color',colore); hold on
+  plot(scale*a_g,'color',this_color); hold on
   title('G/Y')
   ylabel('% of GDP, deviation from baseline')
   xlabel('quarters')
   
   subplot(3,2,3)
-  plot(scale*4*r,'color',colore); hold on
+  plot(scale*4*r,'color',this_color); hold on
   ylabel('ppoints deviation from baseline, annualized')
   xlabel('quarters')
   title('Interest rate')
   
   subplot(3,2,4)
-  plot(scale*c,'color',colore); hold on
+  plot(scale*c,'color',this_color); hold on
   ylabel('percent deviation from baseline')
   xlabel('quarters')
   title('Consumption')
   
   subplot(3,2,5)
-  plot(scale*ik,'color',colore); hold on
+  plot(scale*ik,'color',this_color); hold on
   ylabel('percent deviation from baseline')
   xlabel('quarters')
   title('Investment')

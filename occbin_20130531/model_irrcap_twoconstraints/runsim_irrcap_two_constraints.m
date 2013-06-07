@@ -20,19 +20,12 @@ mod11 = 'dynrbcirrineg';
 PSI=0; PSINEG=5; PHI=0.975;
 save PARAM_EXTRA PSI PSINEG PHI
 
-% express the occasionally binding constraint
-% in linearized form
-% one can use any combination of endogenous variables and parameters
-% declared in the the dynare .mod files
-% constraint1 defines the first constraint
-% if constraint1 is true, solution switches to model2
-% but if constraint_relax is true, solution reverts to model1
 
-% The -0.0001 value guarantees convergence of solution
-% Without that, there would be too much back and forth switching until convergence,
-% and convergence would not be achieved
-constraint1 = 'i<-0.0001';
-constraint_relax1 = 'i>-0.0001';
+% The -0.000001 tolerance helps achieve convergence
+% Without that, there would be too much back and forth switching 
+% across regimes making convergence difficult. 
+constraint1 = 'i<-0.000001';
+constraint_relax1 = 'i>-0.000001';
 
 
 constraint2 = 'i<PHI-1';
@@ -81,7 +74,7 @@ if option==2
 end
 
 
-
+%%
 % Solve model, generate model IRFs
 
 [zdatalinear zdatapiecewise zdatass oobase_ Mbase_ ] = ...
@@ -100,7 +93,7 @@ for i=1:Mbase_.endo_nbr
 end
 
 
-%% Modify to plot IRFs and decision rules
+%% Modify to plot IRFs 
 
 
 titlelist = char('c','lambdak','k','i','a');

@@ -14,6 +14,7 @@ if strmatch(location,'home_matteo','exact')
 elseif strmatch(location,'home_luca','exact')
     dir1='/Applications/dynare/4.3.3/matlab';
     dir2='/Users/Jason/Documents/occbin_repository/occbin_20130531/toolkit_files';
+    %dir1 = '/Users/Jason/Documents/MATLAB/dynare/4.1.0/matlab/';
 elseif strmatch(location,'work_matteo','exact')  
     dir1='C:\E\dynare\4.3.1\matlab';
     dir2='C:\E\occbin\occbin_20130531\toolkit_files';
