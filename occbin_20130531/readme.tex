@@ -1,0 +1,348 @@
+%2multibyte Version: 5.50.0.2890 CodePage: 65001
+
+\documentclass[12pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{rotating}
+\usepackage{ulem}
+
+\setcounter{MaxMatrixCols}{10}
+%TCIDATA{OutputFilter=LATEX.DLL}
+%TCIDATA{Version=5.50.0.2890}
+%TCIDATA{Codepage=65001}
+%TCIDATA{<META NAME="SaveForMode" CONTENT="1">}
+%TCIDATA{BibliographyScheme=Manual}
+%TCIDATA{Created=Thu May 25 17:12:58 2000}
+%TCIDATA{LastRevised=Tuesday, June 04, 2013 11:40:56}
+%TCIDATA{<META NAME="GraphicsSave" CONTENT="32">}
+%TCIDATA{<META NAME="DocumentShell" CONTENT="Journal Articles\Standard LaTeX Article">}
+%TCIDATA{Language=American English}
+%TCIDATA{CSTFile=LaTeX article (bright).cst}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\  \rule{0.5em}{0.5em}}
+\input{tcilatex}
+\setlength{\textheight}{22.5cm}
+\setlength{\textwidth}{16.5cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\evensidemargin}{0cm}
+\setlength{\topmargin}{-1cm}
+
+\begin{document}
+
+
+%TCIMACRO{\TeXButton{no_numbering_chapter}{\setcounter{secnumdepth}{-1}}}%
+%BeginExpansion
+\setcounter{secnumdepth}{-1}%
+%EndExpansion
+
+%TCIMACRO{%
+%\TeXButton{stretch}{\renewcommand{\baselinestretch}{1.05}
+%\normalsize}}%
+%BeginExpansion
+\renewcommand{\baselinestretch}{1.05}
+\normalsize%
+%EndExpansion
+
+\begin{center}
+\textbf{README FOR FOR THE GUERRIERI-IACOVIELLO OCCBIN TOOLKIT}
+
+JUNE 3, 2013
+\end{center}
+
+CITE AS: Guerrieri, Luca, and Matteo Iacoviello (2013) "Occbin:\ A Toolkit
+to Solve Models with Occasionally Binding Constraints Easily", working
+paper, Federal Reserve Board
+
+\bigskip
+
+\section{Overview}
+
+\begin{enumerate}
+\item Modify and run the file \texttt{setpathdynare4.m} so as to point to
+the local dynare installation directory and to the folder containing the 
+\texttt{toolkit\_files} directory.
+
+We have used successfully Dynare versions 4.3.1 on Windows and 4.2.1 on Mac.
+
+\item LIST\ OF\ THE\ EXAMPLE\ FILES (in increasing order of complexity and
+decreasing order of documentation)
+
+\begin{enumerate}
+\item \texttt{runsim\_irrcap.m. }An RBC\ model with non-negativity
+constraint on investment. The two relevant mod files are dynrbc.mod and
+dynrbcirr\_i.mod.
+
+This folder shows how one can use the codes to declare the parameter values
+only once in an outside file (named paramfile\_irrcap.m, called from
+dynrbc\_steadystate.m).
+
+If the example file runs correctly, it will generate a figure like the one
+in the file figure\_example.pdf
+
+\item \texttt{runsim\_borrcon.m} \ In this example, \texttt{borrcon.mod} is
+a model with borrowing constraint that binds occasionally.
+
+\item \texttt{runsim\_irrcap\_twoconstraints.m. }An RBC\ model with
+non-negativity constraint on investment and an asymmetric capital adjustment
+cost. This file shows how one can use the codes to solve a model with two
+occasionally binding constraints using the function \texttt{%
+solve\_two\_constraints}
+
+\texttt{runsim\_irrcap\_twoconstraints\_computepolicy.m. }For the same model
+as above, but uses the code and the initcon option to show one can use the
+toolkit to derive the model's nonlinear policy functions.
+
+Additional examples
+\end{enumerate}
+
+\begin{itemize}
+\item \texttt{runsim\_smetswouters.m}. Solves the Smets-Wouters (AER, 2007)
+model allowing for the ZLB on nominal interest rates (see equation for 
+\texttt{rnot}, the notional interest rate). The codes for the model were
+downloaded from the online Appendix on the AEA webpage. We affected minimal
+changes to the code for compatibility with Dynare 4. To avoid the estimation
+step, some parameter values were set at their initial level prior to
+estimation.
+
+\item \texttt{runsim\_dnk.m. }Solve a new-keynesian model with ZLB and
+government spending. This folder shows how one can use the codes to declare
+the parameter values only once in an outside file (named paramfile\_dnk.m).
+Shows how one can use separate sets of functions to solve model disregarding
+nonlinearities, or to compute impulse responses conditional on different
+baseline paths for the variables.
+
+-- \texttt{dnk.mod} contains a standard new-keynesian model specified away
+from the zlb constraint.
+
+-- \texttt{dnk\_zlb.mod} is an exact replica of dnk.mod file with the model
+specified at the constraint.
+
+Except for the interest rate equation, the models in the two .mod files are
+identical.
+
+\item \texttt{runsim\_nakata.m. }Solve a new-keynesian model with ZLB and
+Rotemberg pricing.
+\end{itemize}
+
+The only restriction for the .mod files is that they can accommodate at most
+one lag and one lead of the endogenous variables, and that the constraint
+only involve contemporaneous variables. With appropriate redefinitions, this
+restriction comes at no loss of generality.
+
+\item The main program assumes that the endogenous, exogenous variables, and
+parameters are declared in exactly the same order in both .mod files.
+
+In general, to create the second file, it pays to simply make a replica of
+the main .mod file that disregards the constraint and amend the relevant
+equations.
+
+\medskip
+
+\item The function that solves the model is:
+
+\texttt{solve\_one\_constraint}
+
+\texttt{[zdatalinear zdatapiecewise zdatass oo\_base M\_base] = }
+
+\texttt{solve\_one\_constraint(modnam, modnamstar, }
+
+\texttt{constraint, constraint\_relax, }
+
+\texttt{shockssequence, irfshock, nperiods, maxiter, init);}
+
+\medskip
+
+Inputs:
+
+\texttt{modnam}: name of reference model (a Dynare .mod file applicable when
+the constraint does not bind)
+
+\texttt{modnamstar}: name of alternative model (a Dynare .mod file
+applicable when the constraint binds)
+
+\texttt{constraint}: the constraint (see note 1 below).
+
+\texttt{constraint\_relax}: the violation of the \texttt{constraint} in the
+alternative model that triggers switch to reference model (often, just
+constraint with sign inverted; see example files)
+
+\texttt{shockssequence}: a sequence of unforeseen shocks under which one
+wants to solve the model (size T$\times $nshocks)
+
+\texttt{irfshock}: label for innovation for IRFs, from Dynare mod file (one
+or more of the `varexo')
+
+\texttt{nperiods}: simulation horizon (can be longer than the sequence of
+shocks defined in \texttt{shockssequence}; in some cases it needs to be long
+enough to ensure convergence back to the reference model at the end of the
+simulation horizon)
+
+\texttt{maxiter}: maximum number of iterations to solve model until
+convergence (20 if not specified)
+
+\texttt{init: }the initial position for the vector of state variables, in
+deviation from steady state. (If not specified, the default is steady state)
+
+\medskip
+
+Outputs:
+
+\texttt{zdatalinear:\ }array containing variables ignoring the occasionally
+binding constraint (the linear solution), in deviation from steady state.
+Each column is a variable, the order is the definition order in the mod file.
+
+\texttt{zdatapiecewise:\ }array containing variables satisfying the
+occasionally binding constraint (the occbin/piecewise solution), in
+deviation from steady state.
+
+\texttt{zdatass:\ }steady state value of the endogenous variables (a vector,
+ordered as in the mod file)
+
+\texttt{oobase\_, Mbase\_}:\ structures produced by Dynare for the reference
+model.
+
+\medskip \medskip
+
+\item The function that solves the model with two constraints is
+
+\texttt{\
+solve\_two\_constraints(modnam\_00,modnam\_10,modnam\_01,modnam\_11,...}
+
+\texttt{\ constraint1, constraint2,...}
+
+\texttt{\ constraint\_relax1, constraint\_relax2,...}
+
+\texttt{\ shockssequence,irfshock,nperiods,curb\_retrench,maxiter,init);}
+
+\medskip
+
+Inputs:
+
+\texttt{modnam\_00}: reference model
+
+\texttt{modnam\_10}: the first constraint switches to its alternative model
+but second does not
+
+\texttt{modnam\_10}: the second constraint switches to its alternative model
+but first one does not
+
+\texttt{modnam\_11}: both constraints switch to their alternative models
+
+\texttt{constraint1}: the first constraint (see note 1 below).
+
+\texttt{constraint\_relax1}: the violation of \texttt{constraint1} in the
+alternative model that triggers switch to reference model (often, just
+constraint with sign inverted; see example files)
+
+\texttt{constraint2}: the second constraint (see note 1 below).
+
+\texttt{constraint\_relax2}: the violation of \texttt{constraint2} in the
+alternative model that triggers switch to reference model (often, just
+constraint with sign inverted; see example files)
+
+\texttt{shockssequence}: a sequence of unforeseen shocks under which one
+wants to solve the model
+
+\texttt{irfshock}: label for innovation for IRFs, from Dynare mod file (one
+or more of the `varexo')
+
+\texttt{nperiods}: simulation horizon (can be longer than the sequence of
+shocks defined in \texttt{shockssequence}; in some cases it needs to be long
+enough to ensure convergence back to the reference model at the end of the
+simulation horizon)
+
+\texttt{curb\_retrench: }a scalar equal to 0 or 1. Default is 0. When set to
+0, it updates the guess based on the full information gained at each
+iteration. When set to 1, it updates in a manner similar to a Gauss-Jacobi
+scheme, slowing the iterations down.
+
+\texttt{maxiter}: maximum number of iterations to solve model until
+convergence (20 if not specified)
+
+\texttt{init: }the initial position for the vector of state variables, in
+deviation from steady state. (If not specified, the default is steady state)
+
+\medskip
+\end{enumerate}
+
+\section{Additional Notes}
+
+\begin{enumerate}
+\item Suppose the original occasionally binding constraint in the model is 
+\begin{equation*}
+i_{t}\geq \log \left( \phi \cdot I_{ss}\right)
+\end{equation*}%
+where $i_{t}$ is natural logarithm of investment (see mod file), $I_{ss}$ is
+steady state investment in levels, and $\phi $ is a parameter.
+
+For the constraint to be violated, in the candidate solution calculated
+under the assumption that the constraint does not bind the following must be
+true%
+\begin{equation*}
+i_{t}<\log \left( \phi \cdot I_{ss}\right)
+\end{equation*}%
+Rewrite each variable as%
+\begin{equation*}
+x_{t}\equiv \widetilde{x}_{t}+x_{ss}
+\end{equation*}
+
+In the runsim\_irrcap.m code, the constraint will have to be expressed in
+linearized form as%
+\begin{equation*}
+\widetilde{i}_{t}+i_{ss}<\log \left( \phi \cdot I_{ss}\right)
+\Longleftrightarrow \widetilde{i}_{t}<\log \left( \phi \right)
+\end{equation*}
+
+and the string will be 
+\begin{equation*}
+i<log(PHII)
+\end{equation*}
+
+Therefore note that in the mod file, $i$ will denote the variable, whereas
+in the \texttt{constraint} the same $i$ will denote the variable minus its
+steady state level.
+
+\item In all runsim\_*.m files, we declare M\_ and oo\_ to be global
+variables (for use by Dynare)
+
+\item In the toolbox, \texttt{constraint} and \texttt{constraint\_relax}
+only admit contemporaneous endogenous variables. Note that this is not
+without loss of generality since appropriate redefinitions can accommodate a
+general lead and lag structure.
+
+\item One does not need to specify the steady state of any alternative
+model, since all models are approximated around the steady state of the
+reference model (which needs to satisfy the Blanchard-Kahn conditions)
+
+\item Values for the parameters (whether in the mod or in the steady state
+file) are specified only in the reference model. The parameter values
+specified in the alternative model are ignored by the code\ (but not the
+list of parameters). If a parameter only enters the alternative model, it
+needs to be declared as parameter and assigned a value in the reference
+model.
+\end{enumerate}
+
+\end{document}
