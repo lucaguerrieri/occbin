@@ -11,7 +11,7 @@ global M_ oo_
 modnam = 'dynrbc';
 modnamstar = 'dynrbcirr_i';
 
-% Constraint (see note 1 in readme.pdf file)
+% Constraint (see notes 1 and 2 in readme.pdf file)
 constraint = 'i<log(PHII)';
 constraint_relax ='lambdak<0';
 
@@ -38,13 +38,16 @@ for i=1:Mbase_.endo_nbr
   eval([deblank(Mbase_.endo_names(i,:)),'_ss=zdatass(i);']);
 end
 
-    
+
+% define inputs for plotting
 titlelist = char('c (consumption)','k (capital)','i (investment)','a (tfp)','lambdak (multiplier)');
 percent = 'Percent';
-level = 'level';
+level = 'Level';
 ylabels = char(percent,percent,percent,percent,level);
-figtitle = 'Simulated variables';
+figtitle = '';
 legendlist = cellstr(char('Piecewise Linear','Linear'));
 line1=100*[c_p,k_p,i_p,a_p,(lambdak_p+lambdak_ss)/100];
 line2=100*[c_l,k_l,i_l,a_l,(lambdak_l+lambdak_ss)/100];
-makechart9(titlelist,legendlist,figtitle,-1000,ylabels,line1,line2);
+
+% create plots
+makechart(titlelist,legendlist,figtitle,ylabels,line1,line2)
