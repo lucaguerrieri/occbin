@@ -1,3 +1,28 @@
+% [zdatalinear zdatapiecewise zdatass oo 00 M 00] = solve two constraints(modnam 00,modnam 10,modnam 01,modnam 11,... constraint1, constraint2,... constraint relax1, constraint relax2,... shockssequence,irfshock,nperiods,curb retrench,maxiter,init);
+% 
+% Inputs:
+% modnam 00: name of the .mod file for reference regime (excludes the .mod extension). modnam10: name of the .mod file for the alternative regime governed by the first
+% constraint.
+% modnam01: name of the .mod file for the alternative regime governed by the second constraint.
+% modnam 11: name of the .mod file for the case in which both constraints force a switch to their alternative regimes.
+% constraint1: the first constraint (see notes 1 and 2 below). If constraint1 evaluates to true, then the solution switches to the alternative regime for condition 1. In thatcase, if constraint2 (described below) evaluates to false, then the model solution switches to enforcing the conditions for an equilibrium in modnam 10. Otherwise, if constraint2 also evaluates to true, then the model solution switches to enforcing the conditions for an equilibrium in modnam 11.
+% constraint relax1: when the condition in constraint relax1 evaluates to true, the solution returns to the reference regime for constraint1.
+% constraint2: the second constraint (see notes 1 and 2 below). constraint relax2: when the condition in constraint relax2 evaluates to true, the
+% solution returns to the reference regime for constraint2. shockssequence: a sequence of unforeseen shocks under which one wants to solve the
+% model
+% irfshock: label for innovation for IRFs, from Dynare .mod file (one or more of the ?varexo?)
+% nperiods: simulation horizon (can be longer than the sequence of shocks defined in shockssequence; must be long enough to ensure convergence back to the reference model at the end of the simulation horizon and may need to be varied depending on the sequence of shocks).
+% curb retrench:	a scalar equal to 0 or 1. Default is 0. When set to 0, it updates the guess based of regimes based on the previous iteration. When set to 1, it updates in a manner similar to a Gauss-Jacobi scheme, slowing the iterations down by updating the guess of regimes only one period at a time.
+% maxiter: maximum number of iterations allowed for the solution algorithm (20 if not specified).
+% init:	the initial position for the vector of state variables, in deviation from steady state (if not specified, the default is a vector of zero implying that the initial conditions coincide with the steady state). The ordering follows the definition order in the .mod files.
+%
+% Outputs:
+% zdatalinear: an array containing paths for all endogenous variables ignoring the occasionally binding constraint (the linear solution), in deviation from steady state. Each column is a variable, the order is the definition order in the .mod files.
+% zdatapiecewise: an array containing paths for all endogenous variables satisfying the occasionally binding constraint (the occbin/piecewise solution), in deviation from steady state. Each column is a variable, the order is the definition order in the .mod files.
+% zdatass: a vector that holds the steady state values of the endogenous variables ( following the definition order in the .mod file).
+% oo00 , M00 :	structures produced by Dynare for the reference model ? see Dynare User Guide.
+
+
 function [ zdatalinear zdatapiecewise zdatass oo00_  M00_ ] = ...
   solve_two_constraints(modnam_00,modnam_10,modnam_01,modnam_11,...
     constraint1, constraint2,...
