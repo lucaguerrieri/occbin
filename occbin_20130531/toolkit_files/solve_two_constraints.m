@@ -23,40 +23,47 @@
 % oo00 , M00 :	structures produced by Dynare for the reference model ? see Dynare User Guide.
 
 
-function [ zdatalinear zdatapiecewise zdatass oo00_  M00_ ] = ...
-  solve_two_constraints(modnam_00,modnam_10,modnam_01,modnam_11,...
-    constraint1, constraint2,...
-    constraint_relax1, constraint_relax2,...
-    shockssequence,irfshock,nperiods,curb_retrench,maxiter,init)
+% Log of changes
+% 6/17/2013 -- Luca added a trailing underscore to local variables in an
+% attempt to avoid conflicts with parameter names defined in the .mod files
+% to be processed.
+% 6/17/2013 -- Luca replaced external .m file setss.m
+
+function [ zdatalinear_ zdatapiecewise_ zdatass_ oo00_  M00_ ] = ...
+  solve_two_constraints(modnam_00_,modnam_10_,modnam_01_,modnam_11_,...
+    constrain1_, constrain2_,...
+    constraint_relax1_, constraint_relax2_,...
+    shockssequence_,irfshock_,nperiods_,curb_retrench_,maxiter_,init_)
 
 global M_ oo_
 
 
 
 % solve model
-eval(['dynare ',modnam_00,' noclearall nolog'])
+eval(['dynare ',modnam_00_,' noclearall nolog'])
 oo00_ = oo_;
 M00_ = M_;
 
 
-for i=1:M00_.endo_nbr
-  eval([deblank(M00_.endo_names(i,:)) '_ss = oo00_.dr.ys(i); ']);
+% for i=1:M00_.endo_nbr
+%   eval([deblank(M00_.endo_names(i,:)) '_ss = oo00_.dr.ys(i); ']);
+% end
+
+for i_indx_ = 1:M00_.param_nbr
+  eval([M00_.param_names(i_indx_,:),'= M00_.params(i_indx_);']);
 end
-for i = 1:M00_.param_nbr
-  eval([M00_.param_names(i,:),'= M00_.params(i);']);
-end
 
 
 
-eval(['dynare ',modnam_10,' noclearall'])
+eval(['dynare ',modnam_10_,' noclearall'])
 oo10_ = oo_;
 M10_ = M_;
 
-eval(['dynare ',modnam_01,' noclearall'])
+eval(['dynare ',modnam_01_,' noclearall'])
 oo01_ = oo_;
 M01_ = M_;
 
-eval(['dynare ',modnam_11,' noclearall'])
+eval(['dynare ',modnam_11_,' noclearall'])
 oo11_ = oo_;
 M11_ = M_;
 
@@ -65,69 +72,69 @@ M11_ = M_;
 
 % check inputs
 if ~strcmp(M00_.endo_names,M10_.endo_names)
-    error([modnam_00,' and ',modnam_10,' need to have exactly the same endogenous variables and they need to be declared in the same order'])
+    error([modnam_00_,' and ',modnam_10_,' need to have exactly the same endogenous variables and they need to be declared in the same order'])
 end
 
 if ~strcmp(M00_.exo_names,M10_.exo_names)
-    error([modnam_00,' and ',modnam_10,' need to have exactly the same exogenous variables and they need to be declared in the same order'])
+    error([modnam_00_,' and ',modnam_10_,' need to have exactly the same exogenous variables and they need to be declared in the same order'])
 end
 
 if ~strcmp(M00_.param_names,M10_.param_names)
-    warning(['The parameter list does not match across the files ',modnam_00,' and ',modnam_10])
+    warning(['The parameter list does not match across the files ',modnam_00_,' and ',modnam_10_])
 end
 
 
 if ~strcmp(M00_.endo_names,M01_.endo_names)
-    error([modnam_00,' and ',modnam_01,' need to have exactly the same endogenous variables and they need to be declared in the same order'])
+    error([modnam_00,' and ',modnam_01_,' need to have exactly the same endogenous variables and they need to be declared in the same order'])
 end
 
 if ~strcmp(M00_.exo_names,M01_.exo_names)
-    error([modnam_00,' and ',modnam_01,' need to have exactly the same exogenous variables and they need to be declared in the same order'])
+    error([modnam_00_,' and ',modnam_01_,' need to have exactly the same exogenous variables and they need to be declared in the same order'])
 end
 
 if ~strcmp(M00_.param_names,M01_.param_names)
-    warning(['The parameter list does not match across the files ',modnam_00,' and ',modnam_01])
+    warning(['The parameter list does not match across the files ',modnam_00_,' and ',modnam_01_])
 end
 
 
 if ~strcmp(M00_.endo_names,M11_.endo_names)
-    error([modnam_00,' and ',modnam_11,' need to have exactly the same endogenous variables and they need to be declared in the same order'])
+    error([modnam_00_,' and ',modnam_11_,' need to have exactly the same endogenous variables and they need to be declared in the same order'])
 end
 
 if ~strcmp(M00_.exo_names,M11_.exo_names)
-    error([modnam_00,' and ',modnam_11,' need to have exactly the same exogenous variables and they need to be declared in the same order'])
+    error([modnam_00_,' and ',modnam_11_,' need to have exactly the same exogenous variables and they need to be declared in the same order'])
 end
 
 if ~strcmp(M00_.param_names,M11_.param_names)
-    warning(['The parameter list does not match across the files ',modnam_00,' and ',modnam_11])
+    warning(['The parameter list does not match across the files ',modnam_00_,' and ',modnam_11_])
 end
 
 
 
 
 
-nvars = M00_.endo_nbr;
-zdatass = oo00_.dr.ys;
+nvars_ = M00_.endo_nbr;
+zdatass_ = oo00_.dr.ys;
 
 
-[hm1,h,hl1,Jbarmat] = get_deriv(M00_,zdatass);
-cof = [hm1,h,hl1];
+[hm1_,h_,hl1_,Jbarmat_] = get_deriv(M00_,zdatass_);
+cof_ = [hm1_,h_,hl1_];
 
 
 M10_.params = M00_.params;
-[hm1,h,hl1,Jbarmat10,resid] = get_deriv(M10_,zdatass);
-cof10 = [hm1,h,hl1];
-Dbarmat10 = resid;
+[hm1_,h_,hl1_,Jbarmat10_,resid_] = get_deriv(M10_,zdatass_);
+cof10_ = [hm1_,h_,hl1_];
+Dbarmat10_ = resid_;
 
 M01_.params = M00_.params;
-[hm1,h,hl1,Jbarmat01,resid] = get_deriv(M01_,zdatass);
-cof01 = [hm1,h,hl1];
-Dbarmat01 = resid;
+[hm1_,h_,hl1_,Jbarmat01_,resid_] = get_deriv(M01_,zdatass_);
+cof01_ = [hm1_,h_,hl1_];
+Dbarmat01_ = resid_;
 
 M11_.params = M00_.params;
-[hm1,h,hl1,Jbarmat11,resid] = get_deriv(M11_,zdatass);
-cof11 = [hm1,h,hl1];
-Dbarmat11 = resid;
+[hm1_,h_,hl1_,Jbarmat11_,resid_] = get_deriv(M11_,zdatass_);
+cof11_ = [hm1_,h_,hl1_];
+Dbarmat11_ = resid_;
 
 
 
@@ -138,60 +145,56 @@ exog_ =  M00_.exo_names;
 
 % processes the constrain so as to uppend a suffix to each
 % endogenous variables
-constraint1_difference = process_constraint(constraint1,'_difference',M00_.endo_names,0);
+constraint1_difference_ = process_constraint(constrain1_,'_difference',M00_.endo_names,0);
 
 % when the last argument in process_constraint is set to 1, the
 % direction of the inequality in the constraint is inverted
-constraint_relax1_difference = process_constraint(constraint_relax1,'_difference',M00_.endo_names,0);
+constraint_relax1_difference_ = process_constraint(constraint_relax1_,'_difference',M00_.endo_names,0);
 
 
 % processes the constrain so as to uppend a suffix to each
 % endogenous variables
-constraint2_difference = process_constraint(constraint2,'_difference',M00_.endo_names,0);
+constraint2_difference_ = process_constraint(constrain2_,'_difference',M00_.endo_names,0);
 
 % when the last argument in process_constraint is set to 1, the
 % direction of the inequality in the constraint is inverted
-constraint_relax2_difference = process_constraint(constraint_relax2,'_difference',M00_.endo_names,0);
+constraint_relax2_difference_ = process_constraint(constraint_relax2_,'_difference',M00_.endo_names,0);
 
 
 
-nshocks = size(shockssequence,1);
+nshocks = size(shockssequence_,1);
 
 
 
 
-if ~exist('init')
-    init = zeros(nvars,1);
+if ~exist('init_')
+    init_ = zeros(nvars_,1);
 end
 
-if ~exist('maxiter')
-    maxiter = 20;
+if ~exist('maxiter_')
+    maxiter_ = 20;
 end
 
-if ~exist('curb_retrench')
-    curb_retrench = 0;
+if ~exist('curb_retrench_')
+    curb_retrench_ = 0;
 end
 
-init_orig = init;
+init_orig_ = init_;
 
 
 
 
 
 
-zdatapiecewise = zeros(nperiods,nvars);
+zdatapiecewise_ = zeros(nperiods_,nvars_);
 
 
-regime1(1) =1;
-regime2(1) =1;
-regimestart1 =1;
-regimestart2 =1;
-violvecbool = zeros(nperiods+1,2);  % This sets the first guess for when
+violvecbool_ = zeros(nperiods_+1,2);  % This sets the first guess for when
 % the constraints are going to hold.
 % The variable is a boolean with two
 % columns. The first column refers to
-% constraint1; the second to
-% constraint2.
+% constrain1_; the second to
+% constrain2_.
 % Each row is a period in time.
 % If the boolean is true it indicates
 % the relevant constraint is expected
@@ -201,99 +204,99 @@ violvecbool = zeros(nperiods+1,2);  % This sets the first guess for when
 % holding -- equivalent to the linear
 % solution.
 
-wishlist = endog_;
-nwishes = size(wishlist,1);
-for ishock = 1:nshocks
+wishlist_ = endog_;
+nwishes_ = size(wishlist_,1);
+for ishock_ = 1:nshocks
     
     
-    changes=1;
-    iter = 0;
+    changes_=1;
+    iter_ = 0;
     
-    while (changes & iter<maxiter)
-        iter = iter +1;
+    while (changes_ & iter_<maxiter_)
+        iter_ = iter_ +1;
         
         % analyse violvec and isolate contiguous periods in the other
         % regime.
-        [regime1 regimestart1]=map_regime(violvecbool(:,1));
-        [regime2 regimestart2]=map_regime(violvecbool(:,2));
+        [regime1 regimestart1]=map_regime(violvecbool_(:,1));
+        [regime2 regimestart2]=map_regime(violvecbool_(:,2));
         
         
-        [zdatalinear]=mkdatap_anticipated_2constraints(nperiods,decrulea,decruleb,...
-            cof,Jbarmat,...
-            cof10,Jbarmat10,Dbarmat10,...
-            cof01,Jbarmat01,Dbarmat01,...
-            cof11,Jbarmat11,Dbarmat11,...
+        [zdatalinear_]=mkdatap_anticipated_2constraints(nperiods_,decrulea,decruleb,...
+            cof_,Jbarmat_,...
+            cof10_,Jbarmat10_,Dbarmat10_,...
+            cof01_,Jbarmat01_,Dbarmat01_,...
+            cof11_,Jbarmat11_,Dbarmat11_,...
             regime1,regimestart1,...
             regime2,regimestart2,...
-            violvecbool,endog_,exog_,...
-            irfshock,shockssequence(ishock,:),init);
+            violvecbool_,endog_,exog_,...
+            irfshock_,shockssequence_(ishock_,:),init_);
         
-        for i=1:nwishes
-            eval([deblank(wishlist(i,:)),'_difference=zdatalinear(:,i);']);
+        for i_indx_=1:nwishes_
+            eval([deblank(wishlist_(i_indx_,:)),'_difference=zdatalinear_(:,i_indx_);']);
         end
         
         
         
         
-        newviolvecbool1 = eval(constraint1_difference);
-        relaxconstraint1 = eval(constraint_relax1_difference);
+        newviolvecbool1_ = eval(constraint1_difference_);
+        relaxconstraint1_ = eval(constraint_relax1_difference_);
         
-        newviolvecbool2 = eval(constraint2_difference);
-        relaxconstraint2 = eval(constraint_relax2_difference);
-        
-        
-        
-        newviolvecbool = [newviolvecbool1;newviolvecbool2];
-        relaxconstraint = [relaxconstraint1;relaxconstraint2];
+        newviolvecbool2_ = eval(constraint2_difference_);
+        relaxconstraint2_ = eval(constraint_relax2_difference_);
         
         
         
-        % check if changes
-        if (max(newviolvecbool(:)-violvecbool(:)>0)) | sum(relaxconstraint(find(violvecbool==1))>0)
-            changes = 1;
+        newviolvecbool_ = [newviolvecbool1_;newviolvecbool2_];
+        relaxconstraint_ = [relaxconstraint1_;relaxconstraint2_];
+        
+        
+        
+        % check if changes_
+        if (max(newviolvecbool_(:)-violvecbool_(:)>0)) | sum(relaxconstraint_(find(violvecbool_==1))>0)
+            changes_ = 1;
         else
-            changes = 0;
+            changes_ = 0;
         end
         
-        if curb_retrench   % apply Gauss-Sidel idea of slowing down the change in the guess
+        if curb_retrench_   % apply Gauss-Sidel idea of slowing down the change in the guess
             % for the constraint -- only relax one
             % period at a time starting from the last
             % one when each of the constraints is true.
-            retrench = 0*violvecbool(:);
-            if ~isempty(find(relaxconstraint1 & violvecbool(:,1)))
-                retrenchpos = max(find(relaxconstraint1 & violvecbool(:,1)));
+            retrench = 0*violvecbool_(:);
+            if ~isempty(find(relaxconstraint1_ & violvecbool_(:,1)))
+                retrenchpos = max(find(relaxconstraint1_ & violvecbool_(:,1)));
                 retrench(retrenchpos) = 1;
             end
-            if ~isempty(find(relaxconstraint2 & violvecbool(:,2)))
-                retrenchpos = max(find(relaxconstraint2 & violvecbool(:,2)));
-                retrench(retrenchpos+nperiods+1) = 1;
+            if ~isempty(find(relaxconstraint2_ & violvecbool_(:,2)))
+                retrenchpos = max(find(relaxconstraint2_ & violvecbool_(:,2)));
+                retrench(retrenchpos+nperiods_+1) = 1;
             end
-            violvecbool = (violvecbool(:) | newviolvecbool(:))-retrench(:);
+            violvecbool_ = (violvecbool_(:) | newviolvecbool_(:))-retrench(:);
         else
-            violvecbool = (violvecbool(:) | newviolvecbool(:))-(relaxconstraint(:) & violvecbool(:));
+            violvecbool_ = (violvecbool_(:) | newviolvecbool_(:))-(relaxconstraint_(:) & violvecbool_(:));
         end
         
-        violvecbool = reshape(violvecbool,nperiods+1,2);
+        violvecbool_ = reshape(violvecbool_,nperiods_+1,2);
         
         
         
     end
-    if changes ==1
+    if changes_ ==1
         display('Did not converge -- increase maxiter')
     end
     
-    init = zdatalinear(1,:);
-    zdatapiecewise(ishock,:)=init;
-    init= init';
+    init_ = zdatalinear_(1,:);
+    zdatapiecewise_(ishock_,:)=init_;
+    init_= init_';
     
     % update the guess for constraint violations for next period
     % update is consistent with expecting no additional shocks next period
-    violvecbool=[violvecbool(2:end,:);zeros(1,2)];
+    violvecbool_=[violvecbool_(2:end,:);zeros(1,2)];
     
 end
 
 
-zdatapiecewise(ishock+1:end,:)=zdatalinear(2:nperiods-ishock+1,:);
+zdatapiecewise_(ishock_+1:end,:)=zdatalinear_(2:nperiods_-ishock_+1,:);
 
-zdatalinear = mkdata(nperiods,decrulea,decruleb,endog_,exog_,wishlist,irfshock,shockssequence,init_orig);
+zdatalinear_ = mkdata(nperiods_,decrulea,decruleb,endog_,exog_,wishlist_,irfshock_,shockssequence_,init_orig_);
 

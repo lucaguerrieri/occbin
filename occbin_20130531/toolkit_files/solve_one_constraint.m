@@ -17,22 +17,35 @@
 % zdatass: theinitialpositionforthevectorofstatevariables,indeviationfromsteady state (if not specified, the default is a vectors of zero implying that the initial conditions coincide with the steady state). The ordering follows the definition order in the .mod files.
 % oobase,Mbase: structures produced by Dynare for the reference model ? see Dynare User Guide.
 
-function [zdatalinear zdatapiecewise zdatass oobase_ Mbase_  ] = ...
-    solve_one_constraint(modnam,modnamstar,...
-    constraint, constraint_relax,...
-    shockssequence,irfshock,nperiods,maxiter,init)
+% Log of changes:
+% 6/17/2013 -- Luca added a trailing underscore to local variables in an
+% attempt to avoid conflicts with parameter names defined in the .mod files
+% to be processed.
+% 6/17/2013 -- Luca replaced external .m file setss.m
+
+
+function [zdatalinear_ zdatapiecewise_ zdatass_ oobase_ Mbase_  ] = ...
+    solve_one_constraint(modnam_,modnamstar_,...
+    constraint_, constraint_relax_,...
+    shockssequence_,irfshock_,nperiods_,maxiter_,init_)
 
 global M_ oo_
 
-errlist = [];
+errlist_ = [];
 
-% solve model
-eval(['dynare ',modnam,' noclearall nolog '])
+% solve the reference model linearly
+eval(['dynare ',modnam_,' noclearall nolog '])
 oobase_ = oo_;
 Mbase_ = M_;
-setss
 
-eval(['dynare ',modnamstar,' noclearall nolog '])
+% import locally the values of parameters assigned in the reference .mod
+% file
+for i_indx_ = 1:Mbase_.param_nbr
+  eval([Mbase_.param_names(i_indx_,:),'= M_.params(i_indx_);']);
+end
+
+% parse the .mod file for the alternative regime
+eval(['dynare ',modnamstar_,' noclearall nolog '])
 oostar_ = oo_;
 Mstar_ = M_;
 
@@ -54,111 +67,120 @@ end
 % use the parameters for the base model.
 Mstar_.params = Mbase_.params;
 
-nvars = Mbase_.endo_nbr;
-zdatass = oobase_.dr.ys;
+nvars_ = Mbase_.endo_nbr;
+zdatass_ = oobase_.dr.ys;
 
 
-[hm1,h,hl1,Jbarmat] = get_deriv(Mbase_,zdatass);
-cof = [hm1,h,hl1];
+% get the matrices holding the first derivatives for the model
+% each regime is treated separately
+[hm1_,h_,hl1_,Jbarmat_] = get_deriv(Mbase_,zdatass_);
+cof_ = [hm1_,h_,hl1_];
 
-[hm1,h,hl1,Jstarbarmat,resid] = get_deriv(Mstar_,zdatass);
-cofstar = [hm1,h,hl1];
-Dstarbarmat = resid;
+[hm1_,h_,hl1_,Jstarbarmat_,resid_] = get_deriv(Mstar_,zdatass_);
+cofstar_ = [hm1_,h_,hl1_];
+Dstartbarmat_ = resid_;
 
-[decrulea,decruleb]=get_pq(oobase_.dr);
+[decrulea_,decruleb_]=get_pq(oobase_.dr);
 endog_ = M_.endo_names;
 exog_ =  M_.exo_names;
 
 
-% processes the constrain so as to uppend a suffix to each
-% endogenous variables
-constraint_difference = process_constraint(constraint,'_difference',Mbase_.endo_names,0);
+% processes the constraints specified in the call to this function
+% uppend a suffix to each endogenous variable
+constraint_difference_ = process_constraint(constraint_,'_difference',Mbase_.endo_names,0);
 
-constraint_relax_difference = process_constraint(constraint_relax,'_difference',Mbase_.endo_names,0);
-
-
-
-nshocks = size(shockssequence,1);
+constraint_relax_difference_ = process_constraint(constraint_relax_,'_difference',Mbase_.endo_names,0);
 
 
-if ~exist('init')
-    init = zeros(nvars,1);
+
+nshocks_ = size(shockssequence_,1);
+
+% if necessary, set default values for optional arguments
+if ~exist('init_')
+    init_ = zeros(nvars_,1);
 end
 
-if ~exist('maxiter')
-    maxiter = 20;
+if ~exist('maxiter_')
+    maxiter_ = 20;
 end
 
-if ~exist('nperiods')
-    nperiods = 100;
+if ~exist('nperiods_')
+    nperiods_ = 100;
 end
 
-init_orig = init;
+
+% set some initial conditions and loop through the shocks 
+% period by period
+init_orig_ = init_;
+zdatapiecewise_ = zeros(nperiods_,nvars_);
+wishlist_ = endog_;
+nwishes_ = size(wishlist_,1);
+violvecbool_ = zeros(nperiods_+1,1);
 
 
-zdatapiecewise = zeros(nperiods,nvars);
-wishlist = endog_;
-nwishes = size(wishlist,1);
-
-violvecbool = zeros(nperiods+1,1);
-for ishock = 1:nshocks
+for ishock_ = 1:nshocks_
     
-    changes=1;
-    iter = 0;
+    changes_=1;
+    iter_ = 0;
     
     
-    while (changes & iter<maxiter)
-        iter = iter +1;
+    while (changes_ & iter_<maxiter_)
+        iter_ = iter_ +1;
+        
+        % analyze when each regime starts based on current guess
+        [regime regimestart]=map_regime(violvecbool_);
         
         
-        [regime regimestart]=map_regime(violvecbool);
+        % get the hypothesized piece wise linear solution
+        [zdatalinear_]=mkdatap_anticipated(nperiods_,decrulea_,decruleb_,...
+            cof_,Jbarmat_,cofstar_,Jstarbarmat_,Dstartbarmat_,...
+            regime,regimestart,violvecbool_,...
+            endog_,exog_,irfshock_,shockssequence_(ishock_,:),init_);
         
-        
-        [zdatalinear]=mkdatap_anticipated(nperiods,decrulea,decruleb,...
-            cof,Jbarmat,cofstar,Jstarbarmat,Dstarbarmat,...
-            regime,regimestart,violvecbool,...
-            endog_,exog_,irfshock,shockssequence(ishock,:),init);
-        
-        for i=1:nwishes
-            eval([deblank(wishlist(i,:)),'_difference=zdatalinear(:,i);']);
+        for i_indx_=1:nwishes_
+            eval([deblank(wishlist_(i_indx_,:)),'_difference=zdatalinear_(:,i_indx_);']);
         end
         
         
         
-        newviolvecbool = eval(constraint_difference);
-        relaxconstraint = eval(constraint_relax_difference);
+        newviolvecbool_ = eval(constraint_difference_);
+        relaxconstraint_ = eval(constraint_relax_difference_);
         
         
         
-        % check if changes
-        if (max(newviolvecbool-violvecbool>0)) | sum(relaxconstraint(find(violvecbool==1))>0)
-            changes = 1;
+        % check if changes to the hypothesis of the duration for each
+        % regime
+        if (max(newviolvecbool_-violvecbool_>0)) | sum(relaxconstraint_(find(violvecbool_==1))>0)
+            changes_ = 1;
         else
-            changes = 0;
+            changes_ = 0;
         end
         
         
-        violvecbool = (violvecbool|newviolvecbool)-(relaxconstraint & violvecbool);
+        violvecbool_ = (violvecbool_|newviolvecbool_)-(relaxconstraint_ & violvecbool_);
         
         
     end
     
-    init = zdatalinear(1,:);
-    zdatapiecewise(ishock,:)=init;
-    init= init';
+    init_ = zdatalinear_(1,:);
+    zdatapiecewise_(ishock_,:)=init_;
+    init_= init_';
     
-    % reset violvecbool for next period -- consistent with expecting no
-    % additional shocks
-    violvecbool=[violvecbool(2:end);0];
+    % reset violvecbool_ for next period's shock -- this resetting is 
+    % consistent with expecting no additional shocks
+    violvecbool_=[violvecbool_(2:end);0];
     
 end
 
+% if necessary, fill in the rest of the path with the remainder of the 
+% last IRF computed.
+zdatapiecewise_(ishock_+1:end,:)=zdatalinear_(2:nperiods_-ishock_+1,:);
 
-zdatapiecewise(ishock+1:end,:)=zdatalinear(2:nperiods-ishock+1,:);
+% get the linear responses
+zdatalinear_ = mkdata(max(nperiods_,size(shockssequence_,1)),...
+                  decrulea_,decruleb_,endog_,exog_,...
+                  wishlist_,irfshock_,shockssequence_,init_orig_);
 
-
-zdatalinear = mkdata(max(nperiods,size(shockssequence,1)),decrulea,decruleb,endog_,exog_,wishlist,irfshock,shockssequence,init_orig);
-
-if changes ==1
-    display('Did not converge -- increase maxiter')
+if changes_ ==1
+    display('Did not converge -- increase maxiter_')
 end
