@@ -67,8 +67,11 @@
 %EndExpansion
 
 \begin{center}
+\Large
 \textbf{USER GUIDE FOR GUERRIERI-IACOVIELLO OCCBIN TOOLKIT}
+\normalsize
 
+\vspace{1cm}
 JUNE 7, 2013
 \end{center}
 
@@ -200,6 +203,7 @@ The ordering follows the definition order in the .mod files.
 
 \medskip 
 
+
 \underline{Outputs:}
 
 \texttt{zdatalinear:\ } an array containing paths for all endogenous
@@ -237,7 +241,7 @@ solve\_two\_constraints(modnam\_00,modnam\_10,modnam\_01,modnam\_11,...}
 
 \medskip 
 
-\underline{\textbf{Inputs:}}
+\underline{Inputs:}
 
 \texttt{modnam\_00}: name of the .mod file for reference regime (excludes
 the .mod extension).
@@ -381,6 +385,10 @@ the alternative model(s) are ignored by the code (but not the list of
 parameters, which is used for an error check). If a parameter only enters
 the alternative model, it needs to be declared as parameter and assigned a
 value in the reference model.
+
+\item We have strived to minimize possible conflicts between local variables used in coding the solution algorithm and parameter names declared in the .mod files.  We have reserved variable names with a trailing underscore -- i.e., names such as ``$myfavoritevariablename\_$'' -- 
+for the solution routines. Variable names with trailing underscores should be avoided in the .mod files.
+
 \end{enumerate}
 
 \end{document}
