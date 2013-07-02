@@ -44,6 +44,11 @@ for i_indx_ = 1:Mbase_.param_nbr
   eval([Mbase_.param_names(i_indx_,:),'= M_.params(i_indx_);']);
 end
 
+for i=1:Mbase_.endo_nbr
+   eval([deblank(Mbase_.endo_names(i,:)) '_ss = oobase_.dr.ys(i); ']);
+end
+
+
 % parse the .mod file for the alternative regime
 eval(['dynare ',modnamstar_,' noclearall nolog '])
 oostar_ = oo_;

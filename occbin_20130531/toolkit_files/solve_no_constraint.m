@@ -10,10 +10,21 @@ errlist = [];
 eval(['dynare ',modnam,' noclearall'])
 oobase_ = oo_;
 Mbase_ = M_;
-setss
 
-nvars = Mbase_.endo_nbr;
 ys_ = oobase_.dr.ys;
+
+for i=1:Mbase_.endo_nbr
+  eval([deblank(Mbase_.endo_names(i,:)) '_ss = oo_.dr.ys(i); ']);
+end
+
+for i = 1:size(Mbase_.param_names)
+  eval([Mbase_.param_names(i,:),'= M_.params(i);']);
+end
+
+
+
+
+
 
 
 [hm1,h,hl1,Jbarmat] = get_deriv(Mbase_,ys_);
